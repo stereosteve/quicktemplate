@@ -56,6 +56,9 @@ Now define an exported function template
 			{% endfor %}
 			</ul>
 		{% endif %}
+		<h1>before flush</h1>
+		{% flush %}
+		<h1>after flush</h1>
 	</div>
 	{% plain %}
 		Arbitrary tags are treated as plaintext inside plain.

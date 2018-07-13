@@ -333,6 +333,17 @@ func (p *parser) parseCat() error {
 	return nil
 }
 
+func (p *parser) parseFlush() error {
+	s := p.s
+	if err := skipTagContents(s); err != nil {
+		return err
+	}
+	p.Printf(`if f, ok := %s.(http.Flusher); ok {
+		f.Flush()
+	}`, "qw"+mangleSuffix)
+	return nil
+}
+
 func (p *parser) parseSwitch() error {
 	s := p.s
 	t, err := expectTagContents(s)
@@ -521,6 +532,10 @@ func (p *parser) tryParseCommonTags(tagBytes []byte) (bool, error) {
 		}
 	case "cat":
 		if err := p.parseCat(); err != nil {
+			return false, err
+		}
+	case "flush":
+		if err := p.parseFlush(); err != nil {
 			return false, err
 		}
 	default:
